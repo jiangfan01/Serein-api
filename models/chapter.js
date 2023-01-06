@@ -15,7 +15,15 @@ module.exports = (sequelize, DataTypes) => {
   }
   Chapter.init({
     courseId: DataTypes.INTEGER,
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "标题必须填写" },
+        notEmpty: { msg: "标题不能为空字符串" },
+        len: { args: [2, 45], msg: "长度必须是2~45之间" }
+      },
+    },
     video: DataTypes.STRING,
     content: DataTypes.TEXT
   }, {

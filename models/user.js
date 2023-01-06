@@ -14,8 +14,27 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        msg: "用户名已经存在，请直接登录"
+      },
+      validate: {
+        notNull: { msg: "用户名必须填写" },
+        notEmpty: { msg: "用户名不能为空字符串" },
+        len: { args: [2, 45], msg: "长度必须是2~45之间" }
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "密码必须填写" },
+        notEmpty: { msg: "密码不能为空字符串" },
+      },
+    },
+    admin: DataTypes.BOOLEAN,
     avatar: DataTypes.STRING,
     sex: DataTypes.TINYINT,
     signature: DataTypes.STRING,

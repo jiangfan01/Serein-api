@@ -5,26 +5,27 @@ const Op = models.Sequelize.Op
 const {success, error} = require("../../utlis/messages")
 
 /**
- * GET /admin/articles
+ * GET /admin/chapters
  * 文章列表
  */
 router.get('/', async function (req, res, next) {
     try {
         //  模糊搜索
         const where = {}
-        // 定义搜索的关键词
+
+        //查询当前课程对应的章节
+        const courseId = req.query.courseId;
+        if (courseId) {
+            where.courseId = {
+                [Op.eq]: courseId
+            }
+        }
+
+        // 模糊搜索标题
         const title = req.query.title
         if (title) {
             where.title = {
                 [Op.like]: `%${title}%`
-            }
-        }
-
-        // 定义搜索的关键词
-        const content = req.query.content
-        if (content) {
-            where.content = {
-                [Op.like]: `%${content}%`
             }
         }
 
@@ -33,7 +34,7 @@ router.get('/', async function (req, res, next) {
         const pageSize = parseInt(req.query.pageSize) || 10;
 
         // 使用findAndCountAll方法返回结果
-        const result = await models.Article.findAndCountAll({
+        const result = await models.Chapter.findAndCountAll({
             order: [["id",]],
             where: where,
             offset: (currentPage - 1) * pageSize,
@@ -41,7 +42,7 @@ router.get('/', async function (req, res, next) {
         })
         // 数据处理
         const data = {
-            articles: result.rows,
+            chapters: result.rows,
             pagination: {
                 currentPage: currentPage,
                 pageSize: pageSize,
@@ -56,33 +57,34 @@ router.get('/', async function (req, res, next) {
 })
 
 /**
- * GET /admin/articles/:id
+ * GET /admin/chapters/:id
  * 单条文章
  */
 router.get('/:id', async function (req, res, next) {
     try {
         // 查询单条
-        const article = await models.Article.findByPk(req.params.id)
-        if (!article) {
+        const chapter = await models.Chapter.findByPk(req.params.id)
+        if (!chapter) {
             return error(res, "文章不存在")
         }
-        success(res, "查询成功", {article})
+        success(res, "查询成功", {chapter})
     } catch (err) {
         error(res, err)
     }
 })
 
 /**
- * POST /admin/articles
+ * POST /admin/chapters
  * 新增文章
  */
 router.post('/', async function (req, res, next) {
     try{
-        const article = await models.Article.create(req.body);
-        if (!article) {
-            return error(res, "文章不存在")
+        const course = await models.User.findByPk(req.body.courseId)
+        if (!course) {
+            return error(res, "所选择的章节不存在")
         }
-        success(res,"新增成功", {article})
+        const chapter = await models.Chapter.create(req.body)
+        success(res,"新增成功", {chapter})
     }catch (err) {
         error(res, err)
     }
@@ -90,35 +92,43 @@ router.post('/', async function (req, res, next) {
 })
 
 /**
- * PUT /admin/articles
+ * PUT /admin/chapters
  * 修改文章
  */
 router.put('/:id', async function (req, res, next) {
     try{
-        const article = await models.Article.findByPk(req.params.id);
-        const title = req.body.title
-        const content = req.body.content
-        if (!article){
-            return error(res, "文章不存在")
+        // 验证章节是否存在
+        const chapter = await models.Chapter.findByPk(req.params.id);
+        if (!chapter){
+            return error(res, "章节不存在")
         }
-        article.update(req.body)
-        success(res,"修改成功",article)
+
+
+
+        //验证课程是否存在
+        const course = await models.User.findByPk(req.body.courseId)
+        if (!course) {
+            return error(res, "所选择的章节不存在")
+        }
+
+        chapter.update(req.body)
+        success(res,"修改成功", {chapter})
     }catch (err) {
         error(res, err)
     }
 })
 
 /**
- * DELETE /admin/articles/:id
+ * DELETE /admin/chapters/:id
  * 删除文章
  */
 router.delete('/:id', async function (req, res, next) {
     try {
-        const article = await models.Article.findByPk(req.params.id);
-        if (!article){
-            return error(res, "文章不存在")
+        const chapter = await models.Chapter.findByPk(req.params.id);
+        if (!chapter){
+            return error(res, "章节不存在")
         }
-        article.destroy()
+        chapter.destroy()
         success(res,"删除成功",)
     }catch (err) {
         error(res, err)

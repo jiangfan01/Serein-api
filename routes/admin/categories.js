@@ -22,9 +22,8 @@ router.get('/', async function (req, res, next) {
 
         const result = await models.Category.findAll()
         success(res, "查询成功", result)
-    } catch (e) {
-        const message = e.errors.map(error => error.message)
-        error(res, message)
+    } catch (err) {
+        error(res, err)
     }
 
 })
@@ -41,8 +40,8 @@ router.get('/:id', async function (req, res, next) {
             return error(res, "文章不存在")
         }
         success(res, "查询成功", {category})
-    } catch (e) {
-        error(res,e.message)
+    } catch (err) {
+        error(res, err)
     }
 })
 
@@ -59,9 +58,8 @@ router.post('/', async function (req, res, next) {
             return error(res, "请填写")
         }
         success(res,"新增成功", {category})
-    }catch (e){
-        const message = e.errors.map(error => error.message)
-        error(res, message)
+    }catch (err) {
+        error(res, err)
     }
 
 })
@@ -75,8 +73,8 @@ router.put('/:id', async function (req, res, next) {
         const category = await models.Category.findByPk(req.params.id);
         category.update(req.body)
         success(res,"修改成功",category)
-    }catch (e){
-        error(res,e.message)
+    }catch (err) {
+        error(res, err)
     }
 })
 
@@ -89,8 +87,8 @@ router.delete('/:id', async function (req, res, next) {
         const category = await models.Category.findByPk(req.params.id);
         category.destroy()
         success(res,"删除成功",)
-    }catch (e){
-        error(res,e.message)
+    }catch (err) {
+        error(res, err)
     }
 
 })
