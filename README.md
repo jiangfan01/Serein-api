@@ -4,9 +4,9 @@
 ### 项目启动
 ```bash
 
-   "cd"   /* api文件路径 */
-   "yarn"  /* 安装模块包到api,没有yarn使用npm包*/
-   "yarn start"  /* 启动项目 */
+   "cd"   # api文件路径 
+   "yarn"  # 安装模块包到api,没有yarn使用npm包
+   "yarn start"  # 启动项目 
   
 ```
 
