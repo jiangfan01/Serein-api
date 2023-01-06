@@ -1,6 +1,16 @@
 # Serein
 ### 个人第一个api项目
 
+### 项目技术栈
+```bash
+#### 语言框架
+node.js + Express
+
+#### 自动代码更新
+nodemon 
+
+```
+
 ### 项目启动
 ```bash
 
