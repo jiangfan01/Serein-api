@@ -51,6 +51,19 @@ router.get('/', async function (req, res, next) {
 })
 
 /**
+ * GET /admin/users/me
+ * 查询当前登录的用户信息
+ */
+router.get("/me", async function (req, res, next) {
+    try {
+        const user = await models.User.findByPk(req.decoded.user.id);
+        success(res, "查询成功", {user})
+    } catch (err) {
+        error(res, err)
+    }
+});
+
+/**
  * GET /admin/users/1
  * 查询单条
  */
@@ -65,7 +78,6 @@ router.get("/:id", async function (req, res, next) {
         error(res, err)
     }
 });
-
 
 /**
  * POST /admin/users
