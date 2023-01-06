@@ -1,12 +1,22 @@
 # Serein
 ### 个人第一个api项目
 
+### 项目技术栈
+```bash
+#### 语言框架
+node.js + Express
+
+#### 自动代码更新
+nodemon 
+
+```
+
 ### 项目启动
 ```bash
 
-   "cd"   /* api文件路径 */
-   "yarn"  /* 安装模块包到api,没有yarn使用npm包*/
-   "yarn start"  /* 启动项目 */
+   "cd"   # api文件路径 
+   "yarn"  # 安装模块包到api,没有yarn使用npm包
+   "yarn start"  # 启动项目 
   
 ```
 
