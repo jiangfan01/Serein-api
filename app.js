@@ -8,9 +8,19 @@ require('dotenv').config()
 //认证中间件，相当于路由守卫认证token
 const adminAuth = require("./middlewares/admin-auth")
 
+//前台中间件
+const userAuth = require('./middlewares/user-auth')
+
 //  前台路由
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const categoriesRouter = require('./routes/categories');
+const articlesRouter = require('./routes/articles');
+const chaptersRouter = require('./routes/chapters');
+const coursesRouter = require('./routes/courses');
+const authRouter = require("./routes/auth");
+const likesRouter = require("./routes/likes");
+const historiesRouter = require("./routes/histories");
 const uploadsRouter = require("./routes/uploads");
 
 //  后台路由
@@ -32,7 +42,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //  前台
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users',userAuth(), usersRouter);
+app.use('/categories',categoriesRouter)
+app.use('/articles',articlesRouter)
+app.use('/chapters',chaptersRouter)
+app.use('/courses',coursesRouter)
+app.use('/auth',authRouter)
+app.use('/likes',userAuth(),likesRouter)
+app.use('/histories',userAuth(),historiesRouter)
 app.use('/uploads',uploadsRouter)
 
 //  后台

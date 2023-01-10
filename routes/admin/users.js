@@ -56,7 +56,7 @@ router.get('/', async function (req, res, next) {
  */
 router.get("/me", async function (req, res, next) {
     try {
-        const user = await models.User.findByPk(req.decoded.user.id);
+        const user = await models.User.findByPk(req.decodead.user.id);
         success(res, "查询成功", {user})
     } catch (err) {
         error(res, err)

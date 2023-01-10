@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.Like.belongsTo(models.Course, { as: "course" })
     }
   }
   Like.init({
     userId: DataTypes.INTEGER,
-    courseId: DataTypes.INTEGER
+    courseId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Like',

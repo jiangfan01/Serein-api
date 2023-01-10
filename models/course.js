@@ -42,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
     image: DataTypes.STRING,
     recommended: DataTypes.BOOLEAN,
     introductory: DataTypes.BOOLEAN,
-    content: DataTypes.TEXT
+    content: DataTypes.TEXT,
+    likesCount: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Course',
