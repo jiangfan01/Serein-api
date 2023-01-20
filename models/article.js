@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: "标题必须填写" },
         notEmpty: { msg: "标题不能为空字符串" },
-        len: { args: [2, 10], msg: "长度必须是2~10之间" }
+        len: { args: [2, 50], msg: "长度必须是2~50之间" }
       },
     },
     content: {

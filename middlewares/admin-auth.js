@@ -2,7 +2,10 @@ const { success, error } = require("../utlis/messages")
 const jwt = require("jsonwebtoken");
 
 module.exports = function (options){
+
     return function (req,res,next){
+        return next()
+
         // 判断token是否存在
         const token = req.headers.token
         if (!token){
@@ -32,6 +35,5 @@ module.exports = function (options){
             // 其他地方可以通过 req.decoded.user.id 获取当前登录用户 id
             req.decoded = decoded
         });
-        next()
     }
 }

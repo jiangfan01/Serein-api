@@ -4,6 +4,7 @@ const models = require('../../models');
 const Op = models.Sequelize.Op
 const {success, error} = require("../../utlis/messages")
 const bcrypt = require("bcryptjs");
+const {where} = require("sequelize");
 
 
 /**
@@ -47,7 +48,6 @@ router.get('/', async function (req, res, next) {
         const message = e.errors.map(error => error.message)
         error(res, message)
     }
-
 })
 
 /**
@@ -73,7 +73,22 @@ router.get("/:id", async function (req, res, next) {
         if (!user) {
             return error(res, "用户不存在")
         }
-        success(res, "查询成功", { user })
+        success(res, "查询成功", {user})
+    } catch (err) {
+        error(res, err)
+    }
+});
+
+/**
+ * GET /admin/users/teacher
+ * 查询当前登录的用户信息
+ */
+router.get("/teacher", async function (req, res, next) {
+    try {
+        const user = await models.User.findAll(
+
+        );
+        success(res, "查询成功", {user})
     } catch (err) {
         error(res, err)
     }
@@ -100,7 +115,7 @@ router.post("/", async function (req, res, next) {
             password: hash
         })
 
-        success(res, "新增成功", { user })
+        success(res, "新增成功", {user})
     } catch (err) {
         error(res, err)
     }
@@ -112,19 +127,19 @@ router.post("/", async function (req, res, next) {
  * 修改用户
  */
 router.put('/:id', async function (req, res, next) {
-    try{
+    try {
         const oldPassword = req.body.oldPassword
         const password = req.body.password
         const passwordConfirm = req.body.passwordConfirm
         const user = await models.User.findByPk(req.params.id)
 
 
-        if (!oldPassword){
-            return error(res,"请输入原始密码")
+        if (!oldPassword) {
+            return error(res, "请输入原始密码")
         }
 
-        if (password !== passwordConfirm){
-            return error(res,"两次密码不一致")
+        if (password !== passwordConfirm) {
+            return error(res, "两次密码不一致")
         }
 
         if (!bcrypt.compareSync(oldPassword, user.password)) {
@@ -144,12 +159,11 @@ router.put('/:id', async function (req, res, next) {
             password: hash
         })
 
-        success(res,"修改成功",user)
-    }catch (e){
-        error(res,e.message)
+        success(res, "修改成功", user)
+    } catch (e) {
+        error(res, e.message)
     }
 })
-
 
 
 module.exports = router;
