@@ -56,7 +56,7 @@ router.get('/', async function (req, res, next) {
  */
 router.get("/me", async function (req, res, next) {
     try {
-        const user = await models.User.findByPk(req.decodead.user.id);
+        const user = await models.User.findByPk(req.decoded.user.id);
         success(res, "查询成功", {user})
     } catch (err) {
         error(res, err)
@@ -73,21 +73,6 @@ router.get("/:id", async function (req, res, next) {
         if (!user) {
             return error(res, "用户不存在")
         }
-        success(res, "查询成功", {user})
-    } catch (err) {
-        error(res, err)
-    }
-});
-
-/**
- * GET /admin/users/teacher
- * 查询当前登录的用户信息
- */
-router.get("/teacher", async function (req, res, next) {
-    try {
-        const user = await models.User.findAll(
-
-        );
         success(res, "查询成功", {user})
     } catch (err) {
         error(res, err)
@@ -131,8 +116,6 @@ router.put('/:id', async function (req, res, next) {
         const oldPassword = req.body.oldPassword
         const password = req.body.password
         const passwordConfirm = req.body.passwordConfirm
-        const user = await models.User.findByPk(req.params.id)
-
 
         if (!oldPassword) {
             return error(res, "请输入原始密码")
@@ -142,13 +125,15 @@ router.put('/:id', async function (req, res, next) {
             return error(res, "两次密码不一致")
         }
 
+        const user = await models.User.findByPk(req.params.id)
+        if (!user) {
+            return error(res, "当前用户不存在，无法修改！")
+        }
+
         if (!bcrypt.compareSync(oldPassword, user.password)) {
             return error(res, "原始密码错误！")
         }
 
-        if (!user) {
-            return error(res, "当前用户不存在，无法修改！")
-        }
 
         //取出加密后的密码
         const salt = bcrypt.genSaltSync(10);
@@ -159,7 +144,7 @@ router.put('/:id', async function (req, res, next) {
             password: hash
         })
 
-        success(res, "修改成功", user)
+        success(res, "修改成功", {user})
     } catch (e) {
         error(res, e.message)
     }

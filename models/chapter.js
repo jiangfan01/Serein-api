@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.Chapter.belongsTo(models.Course,{as:"course"})
     }
   }
   Chapter.init({
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: "排序必须填写" },
         notEmpty: { msg: "排序不能为空字符串" },
-        len: { args: [2, 10], msg: "长度必须是2~10之间" },
+        len: { args: [1, 99], msg: "长度必须是1~99之间" },
         isInt: { msg: "排序必须是整数" },
       },
     },

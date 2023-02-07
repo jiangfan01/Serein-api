@@ -20,6 +20,7 @@ router.get('/', async function (req, res, next) {
             }
         }
 
+
         // 查询推荐课程
         const recommended = req.query.recommended;
         if (recommended) {
@@ -45,7 +46,19 @@ router.get('/', async function (req, res, next) {
             order: [["id",]],
             where: where,
             offset: (currentPage - 1) * pageSize,
-            limit: pageSize
+            limit: pageSize,
+            include:[
+                {
+                    model:models.Category,
+                    as:"category",
+                    attributes: ["id","name"]
+                },
+                {
+                    model:models.User,
+                    as:"user",
+                    attributes: ["id","username"]
+                }
+            ],
         })
         // 数据处理
         const data = {
@@ -58,8 +71,7 @@ router.get('/', async function (req, res, next) {
         }
         success(res, "查询成功", data)
     } catch (e) {
-        const message = e.errors.map(error => error.message)
-        error(res, message)
+        error(res, e.message)
     }
 
 })

@@ -42,7 +42,7 @@ router.post("/", async function (req, res, next) {
                 id: user.id,
                 admin: user.admin
             }
-        }, process.env.SECRET, { expiresIn: "1d" });
+        }, process.env.SECRET, { expiresIn: "7d" });
         //  env.SECRET在环境变量中定义
         success(res, "登录成功", { token })
     } catch (err) {

@@ -38,7 +38,14 @@ router.get('/', async function (req, res, next) {
             order: [["id",]],
             where: where,
             offset: (currentPage - 1) * pageSize,
-            limit: pageSize
+            limit: pageSize,
+            include:[
+                {
+                    model:models.Course,
+                    as:"course",
+                    attributes: ["id","name"]
+                },
+            ],
         })
         // 数据处理
         const data = {
@@ -79,7 +86,8 @@ router.get('/:id', async function (req, res, next) {
  */
 router.post('/', async function (req, res, next) {
     try{
-        const course = await models.User.findByPk(req.body.courseId)
+        const course = await models.Course.findByPk(req.body.courseId)
+
         if (!course) {
             return error(res, "所选择的章节不存在")
         }
@@ -102,15 +110,6 @@ router.put('/:id', async function (req, res, next) {
         if (!chapter){
             return error(res, "章节不存在")
         }
-
-
-
-        //验证课程是否存在
-        const course = await models.User.findByPk(req.body.courseId)
-        if (!course) {
-            return error(res, "所选择的章节不存在")
-        }
-
         chapter.update(req.body)
         success(res,"修改成功", {chapter})
     }catch (err) {
