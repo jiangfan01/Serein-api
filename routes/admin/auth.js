@@ -26,8 +26,11 @@ router.post("/", async function (req, res, next) {
 
         // 通过用户名查询用户是否是管理员和用户是否存在
         const user = await models.User.findOne({ where: { username } })
-        if (!user || !user.admin) {
+        if (!user) {
             return error(res, "用户不存在，请联系管理员！")
+        }
+        if (!user.admin){
+            return error(res,"用户不是管理员无法登录")
         }
 
         // 再比对密码是否正确

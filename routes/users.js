@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const models = require("../models");
 const Op = models.Sequelize.Op
-const { success, error } = require("../utlis/messages")
+const {success, error} = require("../utlis/messages")
 const bcrypt = require("bcryptjs");
 
 /**
@@ -12,11 +12,11 @@ const bcrypt = require("bcryptjs");
 router.get("/me", async function (req, res, next) {
     try {
         const user = await models.User.findOne({
-            where: { id: req.decoded.user.id },
+            where: {id: req.decoded.user.id},
             //不返回密码和管理员给前端
-            attributes: { exclude: ["password", "admin"] }
+            attributes: {exclude: ["password", "admin"]}
         });
-        success(res, "查询成功", { user })
+        success(res, "查询成功", {user})
     } catch (err) {
         error(res, err)
     }
@@ -24,7 +24,7 @@ router.get("/me", async function (req, res, next) {
 
 /**
  * GET /users/likes
- * 查询当前登录的用户信息
+ * 查询当前登录的喜欢
  */
 router.get("/likes", async function (req, res, next) {
     try {
@@ -32,12 +32,12 @@ router.get("/likes", async function (req, res, next) {
         const pageSize = parseInt(req.query.pageSize) || 10;
 
         const result = await models.Like.findAndCountAll({
-            order:[["id","DESC"]],
-            where:{userId:req.decoded.user.id},
-            include:[
+            order: [["id", "DESC"]],
+            where: {userId: req.decoded.user.id},
+            include: [
                 {
-                    model:models.Course,
-                    as:"course",
+                    model: models.Course,
+                    as: "course",
                     attributes: ["id", "name", "image", "content", "createdAt"]
                 }
             ],
@@ -61,7 +61,7 @@ router.get("/likes", async function (req, res, next) {
 
 /**
  * GET /users/histories
- * 查询当前登录的收藏的课程
+ * 查询当前登录的浏览历史
  */
 router.get("/histories", async function (req, res, next) {
     try {
@@ -70,7 +70,7 @@ router.get("/histories", async function (req, res, next) {
 
         const result = await models.History.findAndCountAll({
             order: [["id", "DESC"]],
-            where: { userId: req.decoded.user.id },
+            where: {userId: req.decoded.user.id},
             include: [
                 {
                     model: models.Course,
@@ -86,7 +86,7 @@ router.get("/histories", async function (req, res, next) {
             offset: (currentPage - 1) * pageSize,
             limit: pageSize
         })
-        const histories = result.rows.map(item => ({ course: item.course, chapter: item.chapter }))
+        const histories = result.rows.map(item => ({course: item.course, chapter: item.chapter}))
         success(res, "查询成功", {
             histories,
             pagination: {

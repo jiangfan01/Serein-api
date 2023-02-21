@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const moment = require("moment");
 module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
     /**
@@ -12,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       models.Course.belongsTo(models.Category,{as:"category",foreignKey:"categoryId"})
       models.Course.belongsTo(models.User,{as:"user",foreignKey:"userId"})
-      models.Course.hasMany(models.Chapter,{as:"chapter"})
+      models.Course.hasMany(models.Chapter,{as:"chapters"})
     }
   }
   Course.init({
@@ -46,6 +47,13 @@ module.exports = (sequelize, DataTypes) => {
     introductory: DataTypes.BOOLEAN,
     content: DataTypes.TEXT,
     likesCount: DataTypes.INTEGER,
+    createdAt:{
+      type:DataTypes.DATE,
+      get(){
+        moment.locale("zh-CN")
+        return moment(this.getDataValue("createdAt")).format("ll")
+      }
+    }
   }, {
     sequelize,
     modelName: 'Course',

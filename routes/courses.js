@@ -55,11 +55,22 @@ router.get('/', async function (req, res, next) {
  */
 router.get('/:id', async function (req, res, next) {
     try {
-        // 查询单条
-        const course = await models.Course.findByPk(req.params.id)
-        if (!course) {
-            return error(res, "课程不存在")
-        }
+
+        const course = await models.Course.findOne({
+            where: {id: req.params.id},
+            include: [
+                {
+                    model: models.Chapter,
+                    as: "chapters",
+                },
+                {
+                    model: models.User,
+                    as: "user",
+                }
+            ],
+
+        })
+
         success(res, "查询成功", {course})
     } catch (e) {
         error(res, e.message)

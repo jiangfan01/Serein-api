@@ -26,7 +26,8 @@ module.exports = function (options){
             // 如果都成功，将 Token 解析出来的数据存入req。
             // 其他地方可以通过 req.decoded.user.id 获取当前登录用户 id
             req.decoded = decoded
+            next()
         });
-        next()
+
     }
 }

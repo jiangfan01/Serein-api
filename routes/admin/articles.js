@@ -34,7 +34,7 @@ router.get('/', async function (req, res, next) {
 
         // 使用findAndCountAll方法返回结果
         const result = await models.Article.findAndCountAll({
-            order: [["id",]],
+            order: [["id", "DESC"]],
             where: where,
             offset: (currentPage - 1) * pageSize,
             limit: pageSize
