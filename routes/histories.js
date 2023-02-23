@@ -24,14 +24,16 @@ router.post("/", async function (req, res, next) {
         }
 
         //查询之前是否访问过
-        const history = await models.History.findOne({where: {courseId, chapterId}})
+        const history = await models.History.findOne({ where: { courseId, userId } })
+
+        // 如果没有记录，那就新增
         if (!history) {
-            //如果没有记录就创建一个记录
-            await models.History.create({courseId, chapterId, userId})
+            await models.History.create({ courseId, chapterId, userId })
         } else {
             // 如果有记录，就更新章节id
-            await history.update({chapterId})
+            await history.update({ chapterId })
         }
+
         success(res, "记录成功")
     } catch (err) {
         error(res, err)

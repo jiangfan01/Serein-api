@@ -24,12 +24,12 @@ router.get("/me", async function (req, res, next) {
 
 /**
  * GET /users/likes
- * 查询当前登录的喜欢
+ * 查询当前登录的收藏
  */
 router.get("/likes", async function (req, res, next) {
     try {
         const currentPage = parseInt(req.query.currentPage) || 1;
-        const pageSize = parseInt(req.query.pageSize) || 10;
+            const pageSize = parseInt(req.query.pageSize) || 10;
 
         const result = await models.Like.findAndCountAll({
             order: [["id", "DESC"]],
@@ -58,6 +58,33 @@ router.get("/likes", async function (req, res, next) {
         error(res, err)
     }
 });
+
+/**
+ * 当前登录用户是否收藏某课程
+ * GET /users/liked?courseId=1
+ */
+router.get("/liked", async function (req, res, next) {
+    try {
+        const courseId = req.query.courseId
+        const userId = req.decoded.user.id
+
+        const course = await models.Course.findByPk(courseId)
+        if (!course) {
+            return error(res, "课程不存在！")
+        }
+
+        // 检查课程之前是否收藏过(通过查找课程id 用户id)
+        const like = await models.Like.findOne({where: {courseId, userId}})
+        const liked = !!like
+
+
+        success(res, '查询成功', {liked})
+    } catch (err) {
+        error(res, err)
+    }
+});
+
+
 
 /**
  * GET /users/histories
