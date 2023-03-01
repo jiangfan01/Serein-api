@@ -108,14 +108,14 @@ router.get('/sexes', async function (req, res, next) {
     const man = await models.User.count({
         where: {
             sex: {
-                [Op.eq]: 0
+                [Op.eq]: 1
             }
         }
     })
     const women = await models.User.count({
         where: {
             sex: {
-                [Op.eq]: 1
+                [Op.eq]: 0
             }
         }
     })
