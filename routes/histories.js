@@ -18,13 +18,13 @@ router.post("/", async function (req, res, next) {
             error(res, "当前课程不存在")
         }
 
-        const chapter = await models.Course.findByPk(chapterId)
+        const chapter = await models.Chapter.findByPk(chapterId)
         if (!chapter) {
             error(res, "当前教程不存在")
         }
 
-        //查询之前是否访问过
-        const history = await models.History.findOne({ where: { courseId, userId } })
+        // 检查课程之前是否记录
+        const history = await models.History.findOne({ where: { courseId, chapterId } })
 
         // 如果没有记录，那就新增
         if (!history) {
